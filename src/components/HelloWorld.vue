@@ -24,10 +24,7 @@ export default {
         "text": "Sample help request",
         "creator": 'org.deha.participant.HayatZinciriParticipant#DEHA'
       }
-      console.log(data)
-      await fetch('http://34.240.2.41:3000/api/org.deha.cagri.CagriYarat', {method: 'POST', mode: 'cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
-        .then(response => response.json())
-        .then(data => console.log(data));
+      await fetch('http://34.240.2.41:3000/api/org.deha.cagri.CagriYarat', {method: 'POST', mode: 'cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
     }
   }
 }

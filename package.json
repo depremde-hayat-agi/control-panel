@@ -9,7 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
-    "vue": "^2.6.11"
+    "leaflet": "^1.6.0",
+    "lodash": "^4.17.15",
+    "vue": "^2.6.11",
+    "vue2-leaflet": "^2.5.2",
+    "websocket": "^1.0.31"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

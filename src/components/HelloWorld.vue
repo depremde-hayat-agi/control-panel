@@ -1,58 +1,81 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div style="height: 500px; width: 100%">
+    <l-map
+      :zoom="zoom"
+      :center="center"
+      :options="mapOptions"
+      style="height: 80%"
+    >
+      <l-tile-layer
+        :url="url"
+      />
+       <l-marker v-for="m in markers" :lat-lng="m.latlng" v-bind:key="m.id" :icon="icon" >
+       </l-marker>
+    </l-map>
+   
   </div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
-  }
-}
-</script>
+import _ from 'lodash'
+import { latLng } from "leaflet";
+import { LMap, LIcon, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import {  icon } from "leaflet";
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>
+export default {
+  name: "Example",
+  components: {
+    LMap,
+    LIcon,
+    LTileLayer,
+    LMarker,
+    LPopup,
+    LTooltip
+  },
+  data() {
+    return {
+      markers: [],
+      zoom: 13,
+      center: latLng(41.015137, 28.979530),
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      mapOptions: {
+        zoomSnap: 0.5
+      },
+      icon: icon({
+        iconUrl: "https://adalarpostasi.files.wordpress.com/2015/06/old-car-2-icon.png",
+        iconSize: [50, 50]
+      }),
+    };
+  },
+  created: function() {
+    console.log("Starting connection to WebSocket Server")
+    const connection = new WebSocket("ws://34.240.2.41:3000")
+
+    connection.onmessage = (event) => {
+      console.log(event.data)
+      /*
+      const jsondata = JSON.parse(event.data)
+      const id = jsondata.id
+      const coor = latLng(jsondata.coor)
+
+      this.markers.push({id:id, latlng: coor})
+      console.log(this.markers);
+      */
+    }
+
+    connection.onopen = function(event) {
+      /*
+      this.send(JSON.stringify({id: 1, coor: [41.015137, 28.979530]}))
+      */
+      console.log("Successfully connected to the echo websocket server...")
+      
+    }
+
+  },
+  methods: {
+    innerClick() {
+      alert("Click!");
+    }
+  }
+};
+</script>

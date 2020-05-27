@@ -1,81 +1,34 @@
 <template>
-  <div style="height: 500px; width: 100%">
-    <l-map
-      :zoom="zoom"
-      :center="center"
-      :options="mapOptions"
-      style="height: 80%"
-    >
-      <l-tile-layer
-        :url="url"
-      />
-       <l-marker v-for="m in markers" :lat-lng="m.latlng" v-bind:key="m.id" :icon="icon" >
-       </l-marker>
-    </l-map>
-   
+  <div>
+    <cagri-map></cagri-map>
+    <v-btn v-on:click="createCagri">Test</v-btn>
   </div>
 </template>
-
 <script>
-import _ from 'lodash'
-import { latLng } from "leaflet";
-import { LMap, LIcon, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
-import {  icon } from "leaflet";
+import CagriMap from './CagriMap'
+import { v4 as uuidv4 } from 'uuid';
 
 export default {
-  name: "Example",
+  name: "HelloWorld",
   components: {
-    LMap,
-    LIcon,
-    LTileLayer,
-    LMarker,
-    LPopup,
-    LTooltip
+    CagriMap
   },
-  data() {
-    return {
-      markers: [],
-      zoom: 13,
-      center: latLng(41.015137, 28.979530),
-      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      mapOptions: {
-        zoomSnap: 0.5
-      },
-      icon: icon({
-        iconUrl: "https://adalarpostasi.files.wordpress.com/2015/06/old-car-2-icon.png",
-        iconSize: [50, 50]
-      }),
-    };
-  },
-  created: function() {
-    console.log("Starting connection to WebSocket Server")
-    const connection = new WebSocket("ws://34.240.2.41:3000")
 
-    connection.onmessage = (event) => {
-      console.log(event.data)
-      /*
-      const jsondata = JSON.parse(event.data)
-      const id = jsondata.id
-      const coor = latLng(jsondata.coor)
-
-      this.markers.push({id:id, latlng: coor})
-      console.log(this.markers);
-      */
-    }
-
-    connection.onopen = function(event) {
-      /*
-      this.send(JSON.stringify({id: 1, coor: [41.015137, 28.979530]}))
-      */
-      console.log("Successfully connected to the echo websocket server...")
-      
-    }
-
-  },
   methods: {
-    innerClick() {
-      alert("Click!");
+    async createCagri(){
+      const data = {
+        "$class": "org.deha.cagri.CagriYarat",
+        "cagriId": uuidv4(),
+        "lattitude": Math.random() / 100 + this.$getConst('ISTANBUL_LAT'),
+        "longitude": Math.random() / 100 + this.$getConst('ISTANBUL_LNG'),
+        "text": "Sample help request",
+        "creator": 'org.deha.participant.HayatZinciriParticipant#DEHA'
+      }
+      console.log(data)
+      await fetch('http://34.240.2.41:3000/api/org.deha.cagri.CagriYarat', {method: 'POST', mode: 'cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
+        .then(response => response.json())
+        .then(data => console.log(data));
     }
   }
-};
+}
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 500px; width: 100%">
+  <div style="height: 750px; width: 100%">
       
     <l-map
       :zoom="zoom"
@@ -8,7 +8,19 @@
       <l-tile-layer
         :url="url"
       />
-       <l-marker v-for="(item, key) in markers" v-on:click="assignCagri(key)" :lat-lng="item.latLng" v-bind:key="key" :icon="$getIcon(getParticipantName(item.owner))" >
+<!--        v-on:click="assignCagri(key)"-->
+       <l-marker v-for="(item, key) in markers"  :lat-lng="item.latLng" v-bind:key="key" :icon="$getIcon(getParticipantName(item.owner))" >
+           <l-popup>
+               <h3>DeHA Çağrısı</h3>
+               <p>
+                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
+                   sed pretium nisl, ut sagittis sapien. Sed vel sollicitudin nisi.
+                   Donec finibus semper metus id malesuada.
+               </p>
+               <p>
+                   <v-btn  color="primary">Ekip Ata</v-btn>
+               </p>
+           </l-popup>
        </l-marker>
     </l-map>
    a

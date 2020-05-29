@@ -23,6 +23,7 @@
                 </template>
 
                 <v-divider></v-divider>
+                <v-container>
                 <v-list dense>
                     <v-list-item>
                         <v-list-item-content>
@@ -44,44 +45,43 @@
                             <creator-filter></creator-filter>
                         </v-list-item-content>
                     </v-list-item>
+
                 </v-list>
+                    <stream></stream>
+                </v-container>
+
             </v-navigation-drawer>
         </v-card>
     </div>
 </template>
 <script>
-    import _ from 'lodash'
+
     import CagriMap from './CagriMap'
     import TypeFilter from './TypeFilter'
     import OwnerFilter from './OwnerFilter'
-    import {createCagri, getAllCagri} from '@/js/api'
-    import CreatorFilter from "./CreatorFilter";
-    import {event2cagri} from "../js/common";
+    import CreatorFilter from './CreatorFilter'
+
+
+    import Stream from "./Stream";
+    import {createCagri} from "../js/api";
 
     export default {
         name: "HelloWorld",
         components: {
-            CreatorFilter,
+            Stream,
             CagriMap,
             OwnerFilter,
+            CreatorFilter,
             TypeFilter
         },
         data() {
             return {}
         },
         created() {
-            this.getAllCagri().then((data) => {
-                _.map(data, (event) => {
-                    this.$store.commit('addNewCagri', {
-                        cagri: event2cagri(event)
-                    })
-                })
-                console.log(this.$store.getters.filteredCagris)
-            })
+
         },
         methods: {
-            createCagri,
-            getAllCagri
+            createCagri
         }
     }
 </script>

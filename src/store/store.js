@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        selectedCagriIdx: undefined,
         cagris: [],
         typeFilter: "ALL",
         ownerFilter: "ALL",
@@ -20,6 +21,9 @@ export default new Vuex.Store({
       }
     },
     mutations: {
+        changeSelectedCagri(state, payload){
+            return state.selectedCagriIdx = payload.idx
+        },
         addNewCagri(state, payload) {
             return state.cagris.push(payload.cagri);
         },

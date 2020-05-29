@@ -2,14 +2,14 @@
   <div style="height: 750px; width: 100%">
       
     <l-map
-      :zoom="zoom"
+      :zoom="13"
       :center="$getConst('ISTANBUL_LATLNG')"
     >
       <l-tile-layer
         :url="url"
       />
 <!--        v-on:click="assignCagri(key)"-->
-       <l-marker v-for="(item, key) in markers"  :lat-lng="item.latLng" v-bind:key="key" :icon="$getIcon(getParticipantName(item.owner))" >
+       <l-marker v-for="(item, key) in markers"  :lat-lng="item.latLng" v-bind:key="key" :icon="getIcon(getParticipantName(item.owner))" >
            <l-popup>
                <h3>DeHA Çağrısı</h3>
                <p>
@@ -28,30 +28,33 @@
 </template>
 
 <script>
-import _ from 'lodash'
+    import _ from 'lodash'
 import {  latLng } from "leaflet";
-import { LMap, LIcon, LTileLayer, LMarker, LPopup, LTooltip } from "vue2-leaflet";
+import { LMap, LTileLayer, LMarker, LPopup } from "vue2-leaflet";
 
-import ngo from '@/mixins/ngo'
+import {getParticipantName, event2cagri, getIcon} from '@/js/common'
+import {assignCagri} from '@/js/api'
 
 export default {
   name: "Map",
   components: {
     LMap,
-    LIcon,
     LTileLayer,
     LMarker,
     LPopup,
-    LTooltip
   },
-  mixins: [ngo],
   data() {
     return {
-      markers: {},
       zoom: 13,
+
       url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     };
   },
+    computed: {
+        markers () {
+            return _.map(this.$store.getters.filteredCagris, cagri => {return {cagriId: cagri.cagriId, owner: cagri.owner, latLng: latLng([cagri.lattitude, cagri.longitude])}})
+        }
+    },
   created: function() {
     console.log("Starting connection to WebSocket Server", this.$getConst('ISTANBUL_LATLNG'))
     const connection = new WebSocket("ws://34.240.2.41:3000")
@@ -59,9 +62,10 @@ export default {
     connection.onmessage = (event_json) => {
       const event = JSON.parse(event_json.data)
       if(event.$class === 'org.deha.cagri.CagriYaratildi'){
-        this.$set(this.markers, event.cagriId, {cagriId: event.cagriId, owner: event.owner, latLng: latLng([event.lattitude, event.longitude])})
-
-        return
+          this.$store.commit('addNewCagri', {
+              cagri: event2cagri(event)
+          })
+          return
       }
       if(event.$class === 'org.deha.cagri.CagriAtandi' & event.cagriId in this.markers){
         this.markers[event.cagriId]['owner'] = event.owner
@@ -80,19 +84,9 @@ export default {
 
   },
   methods: {
-    
-    async assignCagri(cagriId){
-
-      const data = {
-        "cagriId": cagriId,
-        "owner": 'org.deha.participant.HayatZinciriParticipant#AFAD'
-      }
-
-      await fetch('http://34.240.2.41:3000/api/org.deha.cagri.CagriAta', {method: 'POST', mode: 'cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)})
-    },
-    innerClick() {
-      alert("Click!");
-    }
+      getParticipantName,
+      assignCagri,
+      getIcon
   }
 };
 </script>

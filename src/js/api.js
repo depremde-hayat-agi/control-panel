@@ -1,13 +1,15 @@
-export async function  createCagri(){
+export async function  createNewCagri(latitude, longitude, material, text, creator, validator, owner, cagriType){
     const data = {
-        "lattitude": Math.random() / 100 + this.$getConst('ISTANBUL_LAT'),
-        "longitude": Math.random() / 100 + this.$getConst('ISTANBUL_LNG'),
-        "text": "Sample help request",
-        "creator": "DEHA",
-        "cagriType": "SOS",
-        "validator": "ATANMAMIS",
-        "owner": "ATANMAMIS"
+        "lattitude": latitude,
+        "longitude": longitude,
+        "text": text,
+        "material": material,
+        "creator": creator,
+        "cagriType": cagriType,
+        "validator": validator,
+        "owner": owner
     }
+    console.log(data)
     await fetch('http://34.240.2.41:3000/api/org.deha.cagri.CagriYarat', {method: 'POST', mode: 'cors', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
 }
 

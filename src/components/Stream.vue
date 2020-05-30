@@ -20,7 +20,11 @@
                                         v-text="item.title"
                                 ></v-card-title>
 
-                                <v-card-subtitle v-text="'İstek yaratıcısı: ' + item.artist"></v-card-subtitle>
+                                <v-card-subtitle v-html="'İstek yaratıcısı: ' + item.artist + '<br> İstek sahiplenicisi: ' + item.owner"></v-card-subtitle>
+                                <v-card-text >
+                                    <div>{{item.text}}<br>{{item.date}}</div>
+
+                                </v-card-text>
                             </div>
 
                             <v-avatar
@@ -40,8 +44,8 @@
 
 <script>
     import _ from "lodash";
-    import {getUrl, participant2text} from "../js/common";
-
+    import {participant2text, getSrc} from "../js/common";
+    import dateFormat from 'dateformat';
     export default {
         name: "Stream",
         computed: {
@@ -51,7 +55,10 @@
                         return {
                             color: this.getColor(cagri.cagriType) ,
                             title: this.getTitle(cagri.cagriType),
-                            src: this.getSrc(cagri.creator),
+                            src: getSrc(false, cagri.owner, cagri.material, cagri.cagriType),
+                            text: cagri.text,
+                            owner: cagri.owner,
+                            date: dateFormat(cagri.createdAt, "HH:MM dd-mm-yyyy"),
                             artist: this.getArtist(cagri.owner)
                         }
                     }
@@ -67,11 +74,11 @@
             getColor(cagriType){
                 switch (cagriType) {
                     case "SOS":
-                        return "#ff0000"
+                        return "#EF5350"
                     case "HELP":
-                        return "#ff0000"
+                        return "#EF5350"
                     case "SUPPORT":
-                        return "#ff0000"
+                        return "#A5D6A7"
                     case "MAINTENANCE":
                         return "#ff0000"
                 }
@@ -83,14 +90,12 @@
                     case "HELP":
                         return "Yardım İsteği"
                     case "SUPPORT":
-                        return "Destekte Bulunma İsteği"
+                        return "Destekte Talebi"
                     case "MAINTENANCE":
                         return "Bakım İsteği"
                 }
             },
-            getSrc(creator){
-                return getUrl(creator)
-            },
+
             getArtist(owner){
                 return participant2text(owner)
             }

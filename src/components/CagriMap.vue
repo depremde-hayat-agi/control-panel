@@ -96,7 +96,7 @@ export default {
               case "HELP":
                   return "Yardım İsteği"
               case "SUPPORT":
-                  return "Destekte Talebi"
+                  return "Malzeme Veriyor"
               case "MAINTENANCE":
                   return "Bakım İsteği"
           }

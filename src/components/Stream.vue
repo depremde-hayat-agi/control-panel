@@ -59,7 +59,7 @@
                             text: cagri.text,
                             owner: cagri.owner,
                             date: dateFormat(cagri.createdAt, "HH:MM dd-mm-yyyy"),
-                            artist: this.getArtist(cagri.owner)
+                            artist: cagri.creator
                         }
                     }
                 )
@@ -90,7 +90,7 @@
                     case "HELP":
                         return "Yardım İsteği"
                     case "SUPPORT":
-                        return "Destekte Talebi"
+                        return "Malzeme Sağlıyor"
                     case "MAINTENANCE":
                         return "Bakım İsteği"
                 }

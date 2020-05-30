@@ -31,7 +31,7 @@
             ></v-textarea>
             <v-card-actions class="justify-center">
                 <v-btn v-on:click="closeCagri()" color="warning">İptal et</v-btn>
-                <v-btn v-on:click="createNewCagri(latLng.lat, latLng.lng, material, reqtext, 'AKUT', validator, 'ATANMAMIS', type)" color="primary">Oluştur</v-btn>
+                <v-btn v-on:click="createNewCagri(latLng.lat, latLng.lng, material, reqtext, 'AKUT', validator, 'ATANMAMIS', type); closeCagri()" color="primary">Oluştur</v-btn>
             </v-card-actions>
         </v-container>
     </v-navigation-drawer>
